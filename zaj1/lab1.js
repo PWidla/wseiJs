@@ -44,6 +44,11 @@ function Oblicz(){
 
 
 function obliczSume(liczbyInput){
+    if(liczbyInput.length==0)
+    {
+        return 0;
+    }
+
     let sum = 0;
     for (let i = 0; i < liczbyInput.length; i++) {
         const inputValue = parseFloat(liczbyInput[i].value);
@@ -55,6 +60,11 @@ function obliczSume(liczbyInput){
 }
 
 function obliczSrednia(liczbyInput){
+    if(liczbyInput.length==0)
+    {
+        return 0;
+    }
+
     let sum = 0;
     for (let i = 0; i < liczbyInput.length; i++) {
         const inputValue = parseFloat(liczbyInput[i].value);
@@ -66,6 +76,11 @@ function obliczSrednia(liczbyInput){
 }
 
 function znajdzMin(liczbyInput){
+    if(liczbyInput.length==0)
+    {
+        return 0;
+    }
+
     const liczby = [];
     for (let i = 0; i < liczbyInput.length; i++) {
         const inputValue = parseFloat(liczbyInput[i].value);
@@ -73,11 +88,21 @@ function znajdzMin(liczbyInput){
             liczby.push(inputValue);
         }
     }
+    
+    if(liczby.length==0){
+        return 0;
+    }
+
     const min = Math.min(...liczby);
     return min;
 }
 
 function znajdzMax(liczbyInput){
+    if(liczbyInput.length==0)
+    {
+        return 0;
+    }
+
     const liczby = [];
     for (let i = 0; i < liczbyInput.length; i++) {
         const inputValue = parseFloat(liczbyInput[i].value);
@@ -85,6 +110,11 @@ function znajdzMax(liczbyInput){
             liczby.push(inputValue);
         }
     }
+
+    if(liczby.length==0){
+        return 0;
+    }
+
     const max = Math.max(...liczby);
     return max;
 }
