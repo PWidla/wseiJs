@@ -30,25 +30,33 @@ btnUsunPole.addEventListener('click', () => {
 
 function Oblicz(){
     liczbyInput = document.querySelectorAll('.liczba')
+    if(liczbyInput.length==0)
+    {
+        const suma = 0;
+        const srednia = 0;
+        const min = 0;
+        const max = 0;
 
-    const suma = obliczSume(liczbyInput);
-    const srednia = obliczSrednia(liczbyInput);
-    const min = znajdzMin(liczbyInput);
-    const max = znajdzMax(liczbyInput);
+        wynikiPojemnik.innerHTML = `Suma = ${suma}<br>
+        Średnia = ${srednia}<br>
+        Minimalna wartość = ${min}<br>
+        Maksymalna wartość = ${max}`;
+    }
+    else{
+        const suma = obliczSume(liczbyInput);
+        const srednia = obliczSrednia(liczbyInput);
+        const min = znajdzMin(liczbyInput);
+        const max = znajdzMax(liczbyInput);
 
-    wynikiPojemnik.innerHTML = `Suma = ${suma}<br>
-    Średnia = ${srednia}<br>
-    Minimalna wartość = ${min}<br>
-    Maksymalna wartość = ${max}`;
+        wynikiPojemnik.innerHTML = `Suma = ${suma}<br>
+        Średnia = ${srednia}<br>
+        Minimalna wartość = ${min}<br>
+        Maksymalna wartość = ${max}`;
+    }
 }
 
 
 function obliczSume(liczbyInput){
-    if(liczbyInput.length==0)
-    {
-        return 0;
-    }
-
     let sum = 0;
     for (let i = 0; i < liczbyInput.length; i++) {
         const inputValue = parseFloat(liczbyInput[i].value);
@@ -60,11 +68,6 @@ function obliczSume(liczbyInput){
 }
 
 function obliczSrednia(liczbyInput){
-    if(liczbyInput.length==0)
-    {
-        return 0;
-    }
-
     let sum = 0;
     for (let i = 0; i < liczbyInput.length; i++) {
         const inputValue = parseFloat(liczbyInput[i].value);
@@ -76,11 +79,6 @@ function obliczSrednia(liczbyInput){
 }
 
 function znajdzMin(liczbyInput){
-    if(liczbyInput.length==0)
-    {
-        return 0;
-    }
-
     const liczby = [];
     for (let i = 0; i < liczbyInput.length; i++) {
         const inputValue = parseFloat(liczbyInput[i].value);
@@ -98,11 +96,6 @@ function znajdzMin(liczbyInput){
 }
 
 function znajdzMax(liczbyInput){
-    if(liczbyInput.length==0)
-    {
-        return 0;
-    }
-
     const liczby = [];
     for (let i = 0; i < liczbyInput.length; i++) {
         const inputValue = parseFloat(liczbyInput[i].value);
