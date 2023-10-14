@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" type="text/css" href="style.css">
+
+</head>
+<body>
+  <div id="slider-container">
+    <div id="slider">
+      <div><img src="image1.jpg" alt="Slide 1"></div>
+      <div><img src="image2.jpg" alt="Slide 2"></div>
+      <div><img src="image3.jpg" alt="Slide 3"></div>
+    </div>
+  </div>
+
+  <div id="dots-container">
+    <span class="slider-button" onclick="goToSlide(0)">O</span>
+    <span class="slider-button" onclick="goToSlide(1)">O</span>
+    <span class="slider-button" onclick="goToSlide(2)">O</span>
+  </div> 
+  
+  <div id="navigation">
+    <span class="slider-button2" onclick="prevSlide()">◄</span>
+    <span class="slider-button2" onclick="nextSlide()">►</span>
+  </div>
+
+  <script src="lab2.js"></script>
+</body>
+</html>
