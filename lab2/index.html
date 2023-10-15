@@ -1,29 +1,37 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-  <link rel="stylesheet" type="text/css" href="style.css">
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-  <div id="slider-container">
     <div id="slider">
-      <div><img src="image1.jpg" alt="Slide 1"></div>
-      <div><img src="image2.jpg" alt="Slide 2"></div>
-      <div><img src="image3.jpg" alt="Slide 3"></div>
+        <div id="slider-wrapper">
+            <div class="slides">
+                <img src="https://loremflickr.com/600/400" alt="" id="slide1" class="slide">
+                <img src="http://picsum.photos/seed/picsum/600/400" alt="" id="slide2" class="slide">
+                <img src="https://placekitten.com/600/400" alt="" id="slide3" class="slide">
+                <img src="https://placebear.com/600/400" alt="" id="slide4" class="slide">
+                <img src="https://picsum.photos/600/400" alt="" id="slide5" class="slide">
+            </div>
+        </div>
+        <div id="slider-nav">
+                    <button id="prev" class="slideNav"><-</button>
+                    <button id="slide1Btn" class="slideNav">1</button>
+                    <button id="slide2Btn" class="slideNav">2</button>
+                    <button id="slide3Btn" class="slideNav">3</button>
+                    <button id="slide4Btn" class="slideNav">4</button>
+                    <button id="slide5Btn" class="slideNav">5</button>
+                    <button id="next" class="slideNav">-></button>
+        </div>
     </div>
-  </div>
-
-  <div id="dots-container">
-    <span class="slider-button" onclick="goToSlide(0)">O</span>
-    <span class="slider-button" onclick="goToSlide(1)">O</span>
-    <span class="slider-button" onclick="goToSlide(2)">O</span>
-  </div> 
-  
-  <div id="navigation">
-    <span class="slider-button2" onclick="prevSlide()">◄</span>
-    <span class="slider-button2" onclick="nextSlide()">►</span>
-  </div>
-
-  <script src="lab2.js"></script>
+    <main>
+    </main>
+    <script src="magic.js"></script>
 </body>
+
 </html>
