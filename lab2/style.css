@@ -1,0 +1,31 @@
+#slider {
+	margin: 2em auto;
+	width: 600px;
+	overflow: hidden;
+}
+
+#slider-wrapper {
+	width: 9999px;
+	height: 300px;
+	position: relative;
+	transition: transform 0.4s ease-in-out; 
+}
+
+#slider-nav {
+	margin: 1em 0;
+	text-align: center;
+}
+
+.slide {
+	float: left;
+	width: 600px;
+	height: 300px;
+	position: relative;
+	overflow: hidden;
+}
+
+.slide img {
+	position: absolute;
+	top: 0;
+	left: 0;
+}
