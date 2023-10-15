@@ -20,6 +20,8 @@ function handleButtonClick(event) {
         doTheMagic(valueOfThisSlide);
     } else if (event.target.id === "next" && currentSlide < 5) {
         doTheMagic(currentSlide + 1);
+    } else if (event.target.id === "next" && currentSlide === 5) {
+        doTheMagic(1);
     }
 }
 
