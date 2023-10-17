@@ -6,20 +6,20 @@
 
 #slider-wrapper {
 	width: 9999px;
-	height: 300px;
+	height: 400px;
 	position: relative;
 	transition: transform 0.4s ease-in-out; 
 }
 
 #slider-nav {
-	margin: 1em 0;
 	text-align: center;
+	margin-top: 2em;
 }
 
 .slide {
 	float: left;
 	width: 600px;
-	height: 300px;
+	height: 400px;
 	position: relative;
 	overflow: hidden;
 }
