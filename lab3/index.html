@@ -2,6 +2,11 @@
 <html>
 <head>
     <title>Lab3</title>
+    <style>
+        .colorful{
+            color: red;
+        }
+    </style>
 </head>
 <body>
     <audio id="s1" src="./sounds/clap.wav"></audio>
@@ -35,10 +40,20 @@
     <button onclick="playChannel('channel4')">Play Channel 4</button>
     <input type="radio" name="" id="channel4Radio">
 
-    <br>
+    <br><br>
 
     <button onclick="playAllChannels()">Play All Channels</button>
     <button onclick="playSelectedChannels()">Play selected Channels</button>
+
+    <br><br>
+
+    <label for="bpmInput">BPM:</label>
+    <input type="number" id="bpmInput" value="120">
+    <button onclick="playMetronome()" id="metronomeStartButton">Start</button>
+    <button onclick="stopMetronome()" id="metronomeStopButton">Stop</button>
+    <span>"Bang" will change color to indicate the rythm</span>
+    <br>
+    <label for="indicator" id="indicator">Bang</label>
 
     <script src="script.js"></script>
 </body>
