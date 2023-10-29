@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Lab3</title>
+</head>
+<body>
+    <audio id="s1" src="./sounds/clap.wav"></audio>
+    <audio id="s2" src="./sounds/boom.wav"></audio>
+    <audio id="s3" src="./sounds/ride.wav"></audio>
+    <audio id="s4" src="./sounds/snare.wav"></audio>
+ 
+    <button onclick="startRecording('channel1')">Start Recording Channel 1</button>
+    <button onclick="stopRecording('channel1')">Stop Recording Channel 1</button>
+    <button onclick="playChannel('channel1')">Play Channel 1</button>
+    <input type="radio" name="" id="channel1Radio">
+
+    <br>
+
+    <button onclick="startRecording('channel2')">Start Recording Channel 2</button>
+    <button onclick="stopRecording('channel2')">Stop Recording Channel 2</button>
+    <button onclick="playChannel('channel2')">Play Channel 2</button>
+    <input type="radio" name="" id="channel2Radio">
+
+    <br>
+
+    <button onclick="startRecording('channel3')">Start Recording Channel 3</button>
+    <button onclick="stopRecording('channel3')">Stop Recording Channel 3</button>
+    <button onclick="playChannel('channel3')">Play Channel 3</button>
+    <input type="radio" name="" id="channel3Radio">
+
+    <br>
+
+    <button onclick="startRecording('channel4')">Start Recording Channel 4</button>
+    <button onclick="stopRecording('channel4')">Stop Recording Channel 4</button>
+    <button onclick="playChannel('channel4')">Play Channel 4</button>
+    <input type="radio" name="" id="channel4Radio">
+
+    <br>
+
+    <button onclick="playAllChannels()">Play All Channels</button>
+    <button onclick="playSelectedChannels()">Play selected Channels</button>
+
+    <script src="script.js"></script>
+</body>
+</html>
