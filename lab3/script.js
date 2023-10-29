@@ -1,3 +1,6 @@
+const indicator = document.querySelector('#indicator');
+const bpmInput = document.querySelector("#bpmInput");
+
 const KeyToSound = {
     'a': document.querySelector('#s1'),
     's': document.querySelector('#s2'),
@@ -82,6 +85,27 @@ function playSelectedChannels(){
         let channel = id.slice(0, -5);
         playChannel(channel);
     }
+}
+
+let metronomeInterval;
+
+async function playMetronome(){
+    let bpmValue = parseFloat(bpmInput.value);
+
+    if (isNaN(bpmValue) || bpmValue <= 0){
+        alert('set the BPM (must be positive number)');
+        return;
+    }
+
+    const intervalMs = 60000 / bpmValue;
+
+    metronomeInterval = setInterval(() => {
+        indicator.classList.toggle("colorful");
+    }, intervalMs);
+}
+
+function stopMetronome() {
+    clearInterval(metronomeInterval);
 }
 
 document.addEventListener('keypress', onKeyPress);
