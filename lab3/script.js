@@ -1,5 +1,7 @@
 const indicator = document.querySelector('#indicator');
 const bpmInput = document.querySelector("#bpmInput");
+const channelsContainer = document.querySelector("#channelsContainer");
+let lastChannelNmb = 4;
 
 const KeyToSound = {
     'a': document.querySelector('#s1'),
@@ -106,6 +108,59 @@ async function playMetronome(){
 
 function stopMetronome() {
     clearInterval(metronomeInterval);
+}
+
+function addChannel() {
+    ++lastChannelNmb;
+    const fragment = document.createDocumentFragment();
+    const lineBreak = document.createElement('br');
+    const startBtn = document.createElement('button');
+    const stopBtn = document.createElement('button');
+    const playBtn = document.createElement('button');
+    const inputRadio = document.createElement("INPUT");
+    inputRadio.setAttribute("type", "radio");
+
+    startBtn.addEventListener("click", function() {
+        startRecording('channel' + lastChannelNmb);
+    });
+    startBtn.textContent = "Start Recording Channel " + lastChannelNmb;
+    startBtn.setAttribute("id", "btnStart" + lastChannelNmb);
+    
+    stopBtn.addEventListener("click", function() {
+        stopRecording('channel' + lastChannelNmb);
+    });
+    stopBtn.textContent = "Stop Recording Channel " + lastChannelNmb;
+    stopBtn.setAttribute("id", "btnStop" + lastChannelNmb);
+    
+    playBtn.addEventListener("click", function() {
+        playChannel('channel' + lastChannelNmb);
+    });
+    playBtn.textContent = "Play Channel " + lastChannelNmb;
+    playBtn.setAttribute("id", "btnPlay" + lastChannelNmb);
+    
+    inputRadio.setAttribute("id", "channel" + lastChannelNmb + "Radio");
+
+    fragment.append(lineBreak);
+    fragment.appendChild(startBtn);
+    fragment.appendChild(stopBtn);
+    fragment.appendChild(playBtn);
+    fragment.appendChild(inputRadio);
+
+    channelsContainer.appendChild(fragment);
+}
+
+function removeChannel(){
+    const startBtn = document.getElementById('btnStart'+lastChannelNmb);
+    const stopBtn = document.getElementById('btnStop'+lastChannelNmb);
+    const playBtn = document.getElementById('btnPlay'+lastChannelNmb);
+    const inputRadio = document.getElementById('channel'+lastChannelNmb+'Radio');
+
+    startBtn.remove();
+    stopBtn.remove();
+    playBtn.remove();
+    inputRadio.remove();
+
+    --lastChannelNmb;
 }
 
 document.addEventListener('keypress', onKeyPress);
