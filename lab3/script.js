@@ -84,13 +84,26 @@ async function playChannel(channel) {
         }
     }
 
-    for (let i = 0; i < playedChannel.length; i++) {
-        const record = playedChannel[i];
-        await new Promise((resolve) => setTimeout(() => {
-            playSound(record.sound);
-            resolve();
-        }, record.delay));
+    if (loopCheckbox.checked == true){
+        while(true){
+            for (let i = 0; i < playedChannel.length; i++) {
+                const record = playedChannel[i];
+                await new Promise((resolve) => setTimeout(() => {
+                    playSound(record.sound);
+                    resolve();
+                }, record.delay));
+            }
+        }
     }
+    else{
+        for (let i = 0; i < playedChannel.length; i++) {
+            const record = playedChannel[i];
+            await new Promise((resolve) => setTimeout(() => {
+                playSound(record.sound);
+                resolve();
+            }, record.delay));
+        }
+    }   
 
     console.log(playedChannel);
 }
