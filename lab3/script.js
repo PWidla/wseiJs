@@ -2,6 +2,8 @@ const indicator = document.querySelector('#indicator');
 const bpmInput = document.querySelector("#bpmInput");
 const channelsContainer = document.querySelector("#channelsContainer");
 let lastChannelNmb = 4;
+let isLooped = false;
+const channelFixedLength=15;
 
 const KeyToSound = {
     'a': document.querySelector('#s1'),
@@ -63,7 +65,24 @@ function stopRecording(channel) {
 }
 
 async function playChannel(channel) {
-    const playedChannel = recordingChannels[channel];
+    let loopCheckbox = document.getElementById("loopCheckbox");
+
+    let playedChannel = recordingChannels[channel];
+
+    if (loopCheckbox.checked == true) {
+        if (playedChannel.length < channelFixedLength) {
+            let currentIndex = 0;
+
+            while (playedChannel.length < channelFixedLength) {
+                const dataToCopy = playedChannel[currentIndex % playedChannel.length];
+                playedChannel.push(dataToCopy);
+                currentIndex++;
+            }
+        } else {
+            playedChannel = playedChannel.slice(0, channelFixedLength);
+            recordingChannels[channel] = playedChannel;
+        }
+    }
 
     for (let i = 0; i < playedChannel.length; i++) {
         const record = playedChannel[i];
@@ -72,6 +91,8 @@ async function playChannel(channel) {
             resolve();
         }, record.delay));
     }
+
+    console.log(playedChannel);
 }
 
 function playAllChannels() {
