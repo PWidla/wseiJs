@@ -14,31 +14,39 @@
     <audio id="s3" src="./sounds/ride.wav"></audio>
     <audio id="s4" src="./sounds/snare.wav"></audio>
  
-    <button onclick="startRecording('channel1')">Start Recording Channel 1</button>
-    <button onclick="stopRecording('channel1')">Stop Recording Channel 1</button>
-    <button onclick="playChannel('channel1')">Play Channel 1</button>
-    <input type="radio" name="" id="channel1Radio">
+    <div id="channelsContainer">
+        <button id="btnStart1" onclick="startRecording('channel1')">Start Recording Channel 1</button>
+        <button id="btnStop1" onclick="stopRecording('channel1')">Stop Recording Channel 1</button>
+        <button id="btnPlay1" onclick="playChannel('channel1')">Play Channel 1</button>
+        <input type="radio" name="channelRadio" id="channel1Radio">
+    
+        <br>
+    
+        <button id="btnStart2" onclick="startRecording('channel2')">Start Recording Channel 2</button>
+        <button id="btnStop2" onclick="stopRecording('channel2')">Stop Recording Channel 2</button>
+        <button id="btnPlay2" onclick="playChannel('channel2')">Play Channel 2</button>
+        <input type="radio" name="channelRadio" id="channel2Radio">
+    
+        <br>
+    
+        <button id="btnStart3" onclick="startRecording('channel3')">Start Recording Channel 3</button>
+        <button id="btnStop3" onclick="stopRecording('channel3')">Stop Recording Channel 3</button>
+        <button id="btnPlay3" onclick="playChannel('channel3')">Play Channel 3</button>
+        <input type="radio" name="channelRadio" id="channel3Radio">
+    
+        <br>
+    
+        <button id="btnStart4" onclick="startRecording('channel4')">Start Recording Channel 4</button>
+        <button id="btnStop4" onclick="stopRecording('channel4')">Stop Recording Channel 4</button>
+        <button id="btnPlay4" onclick="playChannel('channel4')">Play Channel 4</button>
+        <input type="radio" name="channelRadio" id="channel4Radio">
+    </div>
+    
 
-    <br>
+    <br><br>
 
-    <button onclick="startRecording('channel2')">Start Recording Channel 2</button>
-    <button onclick="stopRecording('channel2')">Stop Recording Channel 2</button>
-    <button onclick="playChannel('channel2')">Play Channel 2</button>
-    <input type="radio" name="" id="channel2Radio">
-
-    <br>
-
-    <button onclick="startRecording('channel3')">Start Recording Channel 3</button>
-    <button onclick="stopRecording('channel3')">Stop Recording Channel 3</button>
-    <button onclick="playChannel('channel3')">Play Channel 3</button>
-    <input type="radio" name="" id="channel3Radio">
-
-    <br>
-
-    <button onclick="startRecording('channel4')">Start Recording Channel 4</button>
-    <button onclick="stopRecording('channel4')">Stop Recording Channel 4</button>
-    <button onclick="playChannel('channel4')">Play Channel 4</button>
-    <input type="radio" name="" id="channel4Radio">
+    <button onclick="addChannel()">Add channel</button>
+    <button onclick="removeChannel()">Remove channel</button>
 
     <br><br>
 
