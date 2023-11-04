@@ -17,15 +17,25 @@
 }
 
 .slide {
-	float: left;
-	width: 600px;
-	height: 400px;
-	position: relative;
-	overflow: hidden;
+    float: left;
+    width: 600px;
+    height: 400px;
+    position: relative;
+    overflow: hidden;
 }
+
 
 .slide img {
 	position: absolute;
 	top: 0;
 	left: 0;
+}
+
+.fade-base{
+	opacity: 0;
+	transition: opacity 3s;
+}
+
+.unfade{
+	opacity: 1;
 }
