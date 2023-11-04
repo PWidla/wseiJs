@@ -8,6 +8,7 @@ const playFadeBtn = document.querySelector('#playFade')
 const sliderWrapper = document.querySelector('#slider-wrapper');
 const slidesContainer = document.querySelector('#slides');
 const slides = slidesContainer.children;
+const playBackwardsCheck = document.querySelector('#playBackwards')
 
 let mode = "slider";
 let currentSlide = 1;
@@ -19,7 +20,11 @@ let interval;
 function startSlider(){
     interval = setInterval(() =>
     {
-        if(!isPaused){
+        if(playBackwardsCheck.checked===true && !isPaused)
+        {
+            prevBtn.click();
+        }
+        else if(playBackwardsCheck.checked===false && !isPaused){
             nextBtn.click();
         }
     }, 1500);
@@ -98,6 +103,8 @@ function handleButtonClick(event) {
         }
     } else if (event.target.id === "next" && currentSlide === 5) {
         doTheSlide(1);
+    } else if (event.target.id === "prev" && currentSlide === 1) {
+        doTheSlide(5);
     }
 }
 
