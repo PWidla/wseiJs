@@ -9,6 +9,8 @@ const sliderWrapper = document.querySelector('#slider-wrapper');
 const slidesContainer = document.querySelector('#slides');
 const slides = slidesContainer.children;
 const playBackwardsCheck = document.querySelector('#playBackwards')
+const imgs = document.querySelectorAll('img');
+const vids = document.querySelectorAll('video');
 
 let mode = "slider";
 let currentSlide = 1;
@@ -111,3 +113,30 @@ function handleButtonClick(event) {
 buttons.forEach((button) => {
     button.onclick = handleButtonClick;
 });
+
+const lightbox = document.querySelector('.lightbox');
+const close = document.querySelector('.close');
+const lightboxImg = lightbox.querySelector('img');
+
+imgs.forEach((img) => {
+    img.addEventListener('click', function (event) {
+        event.preventDefault();
+        lightbox.style.display = 'flex';
+        lightboxImg.src = event.target.src || event.target.parentNode.href;
+        isPaused = true;
+     });
+})
+
+vids.forEach((vid) => {
+    vid.addEventListener('click', function (event) {
+        event.preventDefault();
+        lightbox.style.display = 'flex';
+        lightboxImg.src = event.target.src || event.target.parentNode.href;
+        isPaused = true;
+     });
+})
+
+close.addEventListener('click', function () {
+    lightbox.style.display = 'none';
+    isPaused = false;
+ });
