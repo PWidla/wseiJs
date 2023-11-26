@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NotePocket</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    
+    <div id="noteFormContainer">
+        <div id="noteForm">
+            <form onsubmit="return validateForm()">
+                <label for="title">Title</label>
+                <br>
+                <input type="text" name="title" id="title">
+                <br>
+
+                <label for="content">Content</label>
+                <br>
+                <input type="text" name="content" id="content">
+                <br>
+
+                <label for="colorPick">Color</label>
+                <br>
+                <input type="color" name="colorPick" id="colorPick" value="#e66465">
+                <br>
+
+                <label for="isPinned">Pin</label>
+                <br>
+                <input type="checkbox" name="isPinned" id="isPinned">
+                <br>
+
+                <input type="submit" value="Add" id="addNoteBtn">
+                <br><br>
+                <input type="button" value="Clear" id="clearBtn">
+            </form>
+        </div>
+    </div>
+
+    <div id="notesContainer">
+
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
