@@ -1,20 +1,20 @@
 const addNoteBtn = document.querySelector('#addNoteBtn');
 const clearBtn = document.querySelector('#clearBtn');
+const removeBtn = document.querySelector('#removeBtn');
+const searchTagBtn = document.querySelector('#searchTagBtn');
+const showAllBtn = document.querySelector('#showAllBtn');
 const notesContainer = document.querySelector('#notesContainer');
+const searchedTagInput = document.querySelector("#searchedTag");
+
 const localStorageNotes = Object.entries(localStorage);
 
 const title = document.querySelector('#title');
 const content = document.querySelector("#content");
 const colorPick = document.querySelector("#colorPick");
 const isPinned = document.querySelector("#isPinned");
+const tagElementInput = document.querySelector("#tagContainerDiv input");
 
-window.addEventListener("load", function () {
-    const localStorageNotes = Object.entries(localStorage);
-
-    if(localStorageNotes.length>0){
-        showNotes(localStorageNotes);
-    }
-});
+window.addEventListener("load", initialNotesShow);
 
 function validateForm() {
     if (title.value.trim() === "") {
@@ -29,12 +29,13 @@ function validateForm() {
 }
 
 class Note {
-    constructor(title, content, colorPick, isPinned) {
+    constructor(title, content, colorPick, isPinned, tag) {
         this.title = title;
         this.content = content;
         this.colorPick = colorPick;
         this.isPinned = isPinned;
-        this.date = new Date().toISOString()
+        this.date = new Date().toISOString();
+        this.tag = tag;
     }
 }
 
@@ -56,37 +57,43 @@ addNoteBtn.addEventListener("click", function (event) {
 
         const localStorageNotes = Object.entries(localStorage);
         showNotes(localStorageNotes);
-        console.log(localStorageNotes);
     }
 });
 
-clearBtn.addEventListener("click", function(event){
-    notesContainer.innerHTML = '';
-    window.localStorage.clear();
-})
-
-function showNotes(localStorageNotes){
+function showNotes(localStorageNotes, isPreview = false){
     notesContainer.innerHTML = '';
 
-    const pinnedNotes = localStorageNotes.filter(([key, value]) => key.startsWith('pinnedNote'));
-    pinnedNotes.forEach(([key, value]) => {
-        const noteData = JSON.parse(value);
-        const noteElement = createNoteElement(noteData.title, noteData.content, noteData.colorPick, noteData.date, noteData.isPinned);
-        notesContainer.appendChild(noteElement); 
-    });
-
-    localStorageNotes.forEach(([key, value]) => {
-        if (key.startsWith('note')) {
+    if(isPreview){
+        localStorageNotes.forEach(([key, value]) => {
             const noteData = JSON.parse(value);
-            const noteElement = createNoteElement(noteData.title, noteData.content, noteData.colorPick, noteData.date, noteData.isPinned);
+            const noteElement = createNoteElement(key, noteData.title, noteData.content, noteData.colorPick, noteData.date, noteData.isPinned, noteData.tag);
             notesContainer.appendChild(noteElement); 
-        }
-    });
+        });
+    }else{
+        const pinnedNotes = localStorageNotes.filter(([key, value]) => key.startsWith('pinnedNote'));
+        pinnedNotes.forEach(([key, value]) => {
+            const noteData = JSON.parse(value);
+            const noteElement = createNoteElement(key, noteData.title, noteData.content, noteData.colorPick, noteData.date, noteData.isPinned, noteData.tag);
+            notesContainer.appendChild(noteElement); 
+        });
+
+        localStorageNotes.forEach(([key, value]) => {
+            if (key.startsWith('note')) {
+                const noteData = JSON.parse(value);
+                const noteElement = createNoteElement(key, noteData.title, noteData.content, noteData.colorPick, noteData.date, noteData.isPinned, noteData.tag);
+                notesContainer.appendChild(noteElement); 
+            }
+        });
+    }
 }
 
-function createNoteElement(title, content, colorPick, date, isPinned) {
+function createNoteElement(id, title, content, colorPick, date, isPinned, tag) {
     const noteElement  = document.createElement('div');
     noteElement.classList.add('note');
+    noteElement.dataset.noteId = id;  
+
+    const noteContent = document.createElement('div');
+    noteContent.id = 'noteContentDiv';
 
     const titleElement = document.createElement('h3');
     titleElement.textContent = title;
@@ -95,7 +102,20 @@ function createNoteElement(title, content, colorPick, date, isPinned) {
     contentElement.textContent = content;
 
     const dateElement = document.createElement('span');
-    dateElement.textContent = date;
+    const formattedDate = new Date(date).toLocaleString();
+    dateElement.textContent = formattedDate;
+
+    const tagContainerDiv = document.createElement('div');
+    tagContainerDiv.id = 'tagContainerDiv';
+
+    const tagElementSpan = document.createElement('span');
+    tagElementSpan.textContent = "Tag";
+    const tagElementInput = document.createElement('input');
+    tagElementInput.type = 'text';
+    tagElementInput.value = tag || '';
+
+    tagContainerDiv.appendChild(tagElementSpan);
+    tagContainerDiv.appendChild(tagElementInput);
 
     if (isPinned) {
         const pinnedElement = document.createElement('span');
@@ -104,10 +124,67 @@ function createNoteElement(title, content, colorPick, date, isPinned) {
         noteElement.appendChild(pinnedElement);
     }
 
-    noteElement.appendChild(titleElement);
-    noteElement.appendChild(contentElement);
-    noteElement.appendChild(dateElement);
+    noteContent.appendChild(titleElement);
+    noteContent.appendChild(contentElement);
+    noteContent.appendChild(dateElement);
+    noteElement.appendChild(noteContent);
+    noteElement.appendChild(tagContainerDiv);
 
     noteElement.style.backgroundColor = colorPick;
+
+    tagElementInput.addEventListener("input", function () {
+        saveTagToLocalStorage(tagElementInput, noteElement.dataset.noteId);
+    });
+
     return noteElement ;
+}
+
+function saveTagToLocalStorage(tagElementInput, noteId) {
+    const note = JSON.parse(localStorage.getItem(noteId));    
+    note.tag = tagElementInput.value;
+    localStorage.setItem(noteId, JSON.stringify(note));
+
+    console.log("localStorage: ", localStorage);
+}
+
+clearBtn.addEventListener("click", function(){
+    notesContainer.innerHTML = '';
+    window.localStorage.clear();
+})
+
+removeBtn.addEventListener("click", function(){
+    const selectedNotes = document.querySelectorAll('.selected');
+    selectedNotes.forEach((note) => {
+        localStorage.removeItem(note.dataset.noteId);
+    })
+
+    const localStorageNotes = Object.entries(localStorage);
+    showNotes(localStorageNotes);
+})
+
+notesContainer.addEventListener("click", function(event) {
+    const clickedNote = event.target.closest('.note');
+    if (clickedNote) {
+        clickedNote.classList.toggle('selected');
+    }
+});
+
+searchTagBtn.addEventListener("click", function(event){
+    const taggedNotes = localStorageNotes.filter(([key, value]) => doesContainTag(value));
+    showNotes(taggedNotes, true);
+    console.log("taggedNotes");
+    console.log(taggedNotes);
+})
+
+showAllBtn.addEventListener("click", initialNotesShow);
+
+function doesContainTag(note){
+    const parsedNote = JSON.parse(note);
+    return parsedNote.tag===searchedTagInput.value;
+}
+
+function initialNotesShow(){
+    const localStorageNotes = Object.entries(localStorage);
+
+    showNotes(localStorageNotes);
 }
