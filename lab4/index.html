@@ -8,9 +8,9 @@
 </head>
 <body>
     
-    <div id="noteFormContainer">
+    <div id="leftPanel">
         <div id="noteForm">
-            <form onsubmit="return validateForm()">
+            <form onbutton="return validateForm()">
                 <label for="title">Title</label>
                 <br>
                 <input type="text" name="title" id="title">
@@ -31,10 +31,20 @@
                 <input type="checkbox" name="isPinned" id="isPinned">
                 <br>
 
-                <input type="submit" value="Add" id="addNoteBtn">
+                <input type="button" value="Add" id="addNoteBtn">
                 <br><br>
-                <input type="button" value="Clear" id="clearBtn">
+                <input type="button" value="Remove" id="removeBtn">
+                <input type="button" value="Clear all" id="clearBtn">
             </form>
+        </div>
+
+        <div id ="searchForm">
+            <label for="title">Search tag</label>
+                <br>
+                <input type="text" name="searchedTag" id="searchedTag">
+                <br>
+                <input type="button" value="Search" id="searchTagBtn">
+                <input type="button" value="Show all" id="showAllBtn">
         </div>
     </div>
 
