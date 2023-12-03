@@ -29,13 +29,14 @@ function validateForm() {
 }
 
 class Note {
-  constructor(title, content, colorPick, isPinned, tag) {
+  constructor(title, content, colorPick, isPinned, tag, reminderDate) {
     this.title = title;
     this.content = content;
     this.colorPick = colorPick;
     this.isPinned = isPinned;
     this.date = new Date().toISOString();
     this.tag = tag;
+    this.reminderDate = reminderDate;
   }
 }
 
@@ -83,7 +84,8 @@ function showNotes(localStorageNotes) {
       noteData.colorPick,
       noteData.date,
       noteData.isPinned,
-      noteData.tag
+      noteData.tag,
+      noteData.reminderDate
     );
     notesContainer.appendChild(noteElement);
   });
@@ -98,14 +100,24 @@ function showNotes(localStorageNotes) {
         noteData.colorPick,
         noteData.date,
         noteData.isPinned,
-        noteData.tag
+        noteData.tag,
+        noteData.reminderDate
       );
       notesContainer.appendChild(noteElement);
     }
   });
 }
 
-function createNoteElement(id, title, content, colorPick, date, isPinned, tag) {
+function createNoteElement(
+  id,
+  title,
+  content,
+  colorPick,
+  date,
+  isPinned,
+  tag,
+  reminderDate = null
+) {
   const noteElement = document.createElement("div");
   noteElement.classList.add("note");
   noteElement.dataset.noteId = id;
@@ -127,6 +139,7 @@ function createNoteElement(id, title, content, colorPick, date, isPinned, tag) {
   reminderDateElement.textContent = "Reminder date";
   const reminderDateInput = document.createElement("input");
   reminderDateInput.type = "datetime-local";
+  reminderDateInput.value = reminderDate;
   reminderDateElement.appendChild(reminderDateInput);
   noteElement.appendChild(reminderDateElement);
 
@@ -174,6 +187,10 @@ function createNoteElement(id, title, content, colorPick, date, isPinned, tag) {
     saveTagToLocalStorage(tagElementInput, noteElement.dataset.noteId);
   });
 
+  reminderDateInput.addEventListener("change", function () {
+    saveDateToLocalStorage(reminderDateInput, noteElement.dataset.noteId);
+  });
+
   return noteElement;
 }
 
@@ -181,6 +198,14 @@ function saveTagToLocalStorage(tagElementInput, noteId) {
   const note = JSON.parse(localStorage.getItem(noteId));
   note.tag = tagElementInput.value;
   localStorage.setItem(noteId, JSON.stringify(note));
+}
+
+function saveDateToLocalStorage(reminderDateInput, noteId) {
+  const note = JSON.parse(localStorage.getItem(noteId));
+  note.reminderDate = reminderDateInput.value;
+  localStorage.setItem(noteId, JSON.stringify(note));
+  console.log(reminderDateInput.value);
+  console.log(Object.entries(localStorage));
 }
 
 clearBtn.addEventListener("click", function () {
