@@ -121,7 +121,14 @@ function createNoteElement(id, title, content, colorPick, date, isPinned, tag) {
 
   const dateElement = document.createElement("span");
   const formattedDate = new Date(date).toLocaleString();
-  dateElement.textContent = formattedDate;
+  dateElement.textContent = "Created at: " + formattedDate;
+
+  const reminderDateElement = document.createElement("div");
+  reminderDateElement.textContent = "Reminder date";
+  const reminderDateInput = document.createElement("input");
+  reminderDateInput.type = "datetime-local";
+  reminderDateElement.appendChild(reminderDateInput);
+  noteElement.appendChild(reminderDateElement);
 
   const tagContainerDiv = document.createElement("div");
   tagContainerDiv.id = "tagContainerDiv";
@@ -158,6 +165,8 @@ function createNoteElement(id, title, content, colorPick, date, isPinned, tag) {
   noteElement.appendChild(tagContainerDiv);
   noteElement.appendChild(checkboxSelectSpan);
   noteElement.appendChild(checkboxSelect);
+  noteElement.appendChild(reminderDateElement);
+  noteElement.appendChild(reminderDateInput);
 
   noteElement.style.backgroundColor = colorPick;
 
@@ -201,7 +210,13 @@ showAllBtn.addEventListener("click", initialNotesShow);
 
 function doesContainTag(note) {
   const parsedNote = JSON.parse(note);
-  return parsedNote.tag === searchedTagInput.value.trim();
+  const searchedTag = searchedTagInput.value.trim();
+
+  if (searchedTag === "") {
+    return parsedNote.tag === undefined || parsedNote.tag === "";
+  }
+
+  return parsedNote.tag !== undefined && parsedNote.tag.includes(searchedTag);
 }
 
 function initialNotesShow() {
