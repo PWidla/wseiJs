@@ -6,13 +6,12 @@ const showAllBtn = document.querySelector("#showAllBtn");
 const notesContainer = document.querySelector("#notesContainer");
 const searchedTagInput = document.querySelector("#searchedTag");
 
-const localStorageNotes = Object.entries(localStorage);
-
 const title = document.querySelector("#title");
 const content = document.querySelector("#content");
 const colorPick = document.querySelector("#colorPick");
 const isPinned = document.querySelector("#isPinned");
 const tagElementInput = document.querySelector("#tagContainerDiv input");
+const reminderDateInput = document.querySelector("#reminderDateElement input");
 
 window.addEventListener("load", initialNotesShow);
 
@@ -22,7 +21,7 @@ function validateForm() {
     return false;
   }
   if (content.value.trim() === "") {
-    alert("Title must be filled out");
+    alert("Content must be filled out");
     return false;
   }
   return true;
@@ -50,7 +49,9 @@ addNoteBtn.addEventListener("click", function (event) {
       title.value,
       content.value,
       colorPick.value,
-      isPinned.checked
+      isPinned.checked,
+      null,
+      null
     );
 
     if (isPinned.checked === true) {
@@ -139,7 +140,7 @@ function createNoteElement(
   reminderDateElement.textContent = "Reminder date";
   const reminderDateInput = document.createElement("input");
   reminderDateInput.type = "datetime-local";
-  reminderDateInput.value = reminderDate;
+  reminderDateInput.value = reminderDate || "";
   reminderDateElement.appendChild(reminderDateInput);
   noteElement.appendChild(reminderDateElement);
 
@@ -204,8 +205,33 @@ function saveDateToLocalStorage(reminderDateInput, noteId) {
   const note = JSON.parse(localStorage.getItem(noteId));
   note.reminderDate = reminderDateInput.value;
   localStorage.setItem(noteId, JSON.stringify(note));
-  console.log(reminderDateInput.value);
-  console.log(Object.entries(localStorage));
+
+  const currentDateTime = new Date().toISOString();
+  if (currentDateTime >= reminderDateInput.value) {
+    showNotification(note.title, note.content, noteId);
+  }
+}
+
+function showNotification(title, content, noteId) {
+  if (Notification.permission === "granted") {
+    new Notification(title, { body: content });
+
+    // Usuń reminderDate z localStorage po wyświetleniu przypomnienia
+    const note = JSON.parse(localStorage.getItem(noteId));
+    delete note.reminderDate;
+    localStorage.setItem(noteId, JSON.stringify(note));
+  } else if (Notification.permission !== "denied") {
+    Notification.requestPermission().then((permission) => {
+      if (permission === "granted") {
+        new Notification(title, { body: content });
+
+        // Usuń reminderDate z localStorage po wyświetleniu przypomnienia
+        const note = JSON.parse(localStorage.getItem(noteId));
+        delete note.reminderDate;
+        localStorage.setItem(noteId, JSON.stringify(note));
+      }
+    });
+  }
 }
 
 clearBtn.addEventListener("click", function () {
@@ -249,3 +275,34 @@ function initialNotesShow() {
 
   showNotes(localStorageNotes);
 }
+//
+function checkReminders() {
+  const localStorageNotes = Object.entries(localStorage);
+  localStorageNotes.forEach(([key, value]) => {
+    const noteData = JSON.parse(value);
+    const reminderDate = noteData.reminderDate;
+
+    if (reminderDate) {
+      const currentDateTime = new Date().toLocaleString();
+      console.log("current: " + currentDateTime);
+      console.log("reminder: " + reminderDate);
+
+      const currentTimestamp = new Date().getTime();
+      const reminderTimestamp = new Date(reminderDate).getTime();
+
+      if (currentTimestamp >= reminderTimestamp) {
+        alert(`Reminder for note:\n${noteData.title}\n${noteData.content}`);
+        console.log(
+          `Reminder for note:\n${noteData.title}\n${noteData.content}`
+        );
+
+        delete noteData.reminderDate;
+        localStorage.setItem(key, JSON.stringify(noteData));
+      }
+    }
+  });
+}
+
+setInterval(checkReminders, 60000);
+
+checkReminders();
