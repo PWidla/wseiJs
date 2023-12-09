@@ -1,57 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>NotePocket</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
     <div id="leftPanel">
-        <div id="noteForm">
-            <form onbutton="return validateForm()">
-                <label for="title">Title</label>
-                <br>
-                <input type="text" name="title" id="title">
-                <br>
+      <div id="noteForm">
+        <form onbutton="return validateForm()">
+          <label for="title">Title</label>
+          <br />
+          <input type="text" name="title" id="title" />
+          <br />
 
-                <label for="content">Content</label>
-                <br>
-                <input type="text" name="content" id="content">
-                <br>
+          <label for="content">Content</label>
+          <br />
+          <input type="text" name="content" id="content" />
+          <br />
 
-                <label for="colorPick">Color</label>
-                <br>
-                <input type="color" name="colorPick" id="colorPick" value="#e66465">
-                <br>
+          <label for="colorPick">Color</label>
+          <br />
+          <input type="color" name="colorPick" id="colorPick" value="#e66465" />
+          <br />
 
-                <label for="isPinned">Pin</label>
-                <br>
-                <input type="checkbox" name="isPinned" id="isPinned">
-                <br>
+          <label for="isPinned">Pin</label>
+          <br />
+          <input type="checkbox" name="isPinned" id="isPinned" />
+          <br />
 
-                <input type="button" value="Add" id="addNoteBtn">
-                <br><br>
-                <input type="button" value="Remove" id="removeBtn">
-                <input type="button" value="Clear all" id="clearBtn">
-            </form>
-        </div>
+          <br /><br />
+          <input type="button" value="Add" id="addNoteBtn" />
+          <br /><br />
+          <input type="button" value="Remove" id="removeBtn" />
+          <input type="button" value="Remove all" id="clearBtn" />
+        </form>
+      </div>
 
-        <div id ="searchForm">
-            <label for="title">Search tag</label>
-                <br>
-                <input type="text" name="searchedTag" id="searchedTag">
-                <br>
-                <input type="button" value="Search" id="searchTagBtn">
-                <input type="button" value="Show all" id="showAllBtn">
-        </div>
+      <div id="searchForm">
+        <label for="title">Search tag</label>
+        <br />
+        <input type="text" name="searchedTag" id="searchedTag" />
+        <br />
+        <input type="button" value="Search" id="searchTagBtn" />
+        <input type="button" value="Show all" id="showAllBtn" />
+      </div>
     </div>
 
-    <div id="notesContainer">
-
-    </div>
+    <div id="notesContainer"></div>
 
     <script src="script.js"></script>
-</body>
+  </body>
 </html>
