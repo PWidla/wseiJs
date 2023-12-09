@@ -34,7 +34,7 @@ class Note {
     this.colorPick = colorPick;
     this.isPinned = isPinned;
     this.date = new Date().toISOString();
-    this.tag = tag;
+    this.tag = tag || "";
     this.reminderDate = reminderDate;
   }
 }
