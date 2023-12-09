@@ -28,7 +28,15 @@ function validateForm() {
 }
 
 class Note {
-  constructor(title, content, colorPick, isPinned, tag, reminderDate) {
+  constructor(
+    title,
+    content,
+    colorPick,
+    isPinned,
+    tag,
+    reminderDate,
+    listElements
+  ) {
     this.title = title;
     this.content = content;
     this.colorPick = colorPick;
@@ -36,6 +44,7 @@ class Note {
     this.date = new Date().toISOString();
     this.tag = tag || "";
     this.reminderDate = reminderDate;
+    this.listElements = listElements || [];
   }
 }
 
@@ -86,7 +95,8 @@ function showNotes(localStorageNotes) {
       noteData.date,
       noteData.isPinned,
       noteData.tag,
-      noteData.reminderDate
+      noteData.reminderDate,
+      noteData.listElements
     );
     notesContainer.appendChild(noteElement);
   });
@@ -102,7 +112,8 @@ function showNotes(localStorageNotes) {
         noteData.date,
         noteData.isPinned,
         noteData.tag,
-        noteData.reminderDate
+        noteData.reminderDate,
+        noteData.listElements
       );
       notesContainer.appendChild(noteElement);
     }
@@ -117,11 +128,15 @@ function createNoteElement(
   date,
   isPinned,
   tag,
-  reminderDate = null
+  reminderDate = null,
+  listElements = null
 ) {
   const noteElement = document.createElement("div");
   noteElement.classList.add("note");
   noteElement.dataset.noteId = id;
+
+  const noteContentElement = document.createElement("div");
+  noteContentElement.id = "noteContentElement";
 
   const noteContent = document.createElement("div");
   noteContent.id = "noteContentDiv";
@@ -147,11 +162,25 @@ function createNoteElement(
   const tagContainerDiv = document.createElement("div");
   tagContainerDiv.id = "tagContainerDiv";
 
+  const listContainerDiv = document.createElement("div");
+  listContainerDiv.id = "listContainerDiv";
+
   const tagElementSpan = document.createElement("span");
   tagElementSpan.textContent = "Tag";
   const tagElementInput = document.createElement("input");
   tagElementInput.type = "text";
   tagElementInput.value = tag || "";
+
+  const listElementSpan = document.createElement("span");
+  listElementSpan.textContent = "List";
+  const listElementInput = document.createElement("input");
+  listElementInput.type = "text";
+  listElementInput.value = tag || "";
+  const listElementBtn = document.createElement("input");
+  listElementBtn.type = "button";
+  listElementBtn.value = "Add";
+  const listElementUl = document.createElement("ul");
+  listElementUl.id = "noteList";
 
   const checkboxSelectSpan = document.createElement("span");
   checkboxSelectSpan.textContent = "Select";
@@ -160,6 +189,12 @@ function createNoteElement(
 
   tagContainerDiv.appendChild(tagElementSpan);
   tagContainerDiv.appendChild(tagElementInput);
+  listContainerDiv.appendChild(listElementInput);
+  listContainerDiv.appendChild(listElementBtn);
+  listContainerDiv.appendChild(document.createElement("br"));
+  listContainerDiv.appendChild(listElementSpan);
+  listContainerDiv.appendChild(document.createElement("br"));
+  listContainerDiv.appendChild(listElementUl);
 
   if (isPinned) {
     const pinnedElement = document.createElement("span");
@@ -175,13 +210,16 @@ function createNoteElement(
   noteContent.appendChild(titleElement);
   noteContent.appendChild(contentElement);
   noteContent.appendChild(dateElement);
-  noteElement.appendChild(noteContent);
-  noteElement.appendChild(tagContainerDiv);
-  noteElement.appendChild(checkboxSelectSpan);
-  noteElement.appendChild(checkboxSelect);
-  noteElement.appendChild(reminderDateElement);
-  noteElement.appendChild(reminderDateInput);
+  noteContentElement.appendChild(noteContent);
+  noteContentElement.appendChild(tagContainerDiv);
+  noteContentElement.appendChild(listContainerDiv);
+  noteContentElement.appendChild(checkboxSelectSpan);
+  noteContentElement.appendChild(checkboxSelect);
+  noteContentElement.appendChild(reminderDateElement);
+  noteContentElement.appendChild(reminderDateInput);
 
+  noteElement.appendChild(noteContentElement);
+  noteElement.appendChild(listContainerDiv);
   noteElement.style.backgroundColor = colorPick;
 
   tagElementInput.addEventListener("input", function () {
@@ -192,7 +230,31 @@ function createNoteElement(
     saveDateToLocalStorage(reminderDateInput, noteElement.dataset.noteId);
   });
 
+  listElementBtn.addEventListener("click", function () {
+    addElementToList(listElementInput.value, noteElement.dataset.noteId);
+  });
+
+  if (listElements && listElements.length > 0) {
+    listElements.forEach((element) => {
+      const listItem = document.createElement("li");
+      listItem.textContent = element;
+      listElementUl.appendChild(listItem);
+    });
+  }
   return noteElement;
+}
+
+function addElementToList(element, noteId) {
+  const note = JSON.parse(localStorage.getItem(noteId));
+  note.listElements.push(element);
+  localStorage.setItem(noteId, JSON.stringify(note));
+
+  const listElementUl = document.querySelector(
+    `[data-note-id="${noteId}"] #noteList`
+  );
+  const listItem = document.createElement("li");
+  listItem.textContent = element;
+  listElementUl.appendChild(listItem);
 }
 
 function saveTagToLocalStorage(tagElementInput, noteId) {
