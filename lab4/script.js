@@ -5,6 +5,8 @@ const searchTagBtn = document.querySelector("#searchTagBtn");
 const showAllBtn = document.querySelector("#showAllBtn");
 const notesContainer = document.querySelector("#notesContainer");
 const searchedTagInput = document.querySelector("#searchedTag");
+const closedTasksContainer = document.querySelector("#closedTasksContainer");
+const closedTasksList = document.querySelector("#closedTasksList");
 
 const title = document.querySelector("#title");
 const content = document.querySelector("#content");
@@ -255,6 +257,26 @@ function addElementToList(element, noteId) {
   const listItem = document.createElement("li");
   listItem.textContent = element;
   listElementUl.appendChild(listItem);
+
+  listItem.addEventListener("click", function () {
+    closeTask(listItem, noteId);
+  });
+}
+
+function closeTask(listItem, noteId) {
+  const note = JSON.parse(localStorage.getItem(noteId));
+  const elementText = listItem.textContent;
+
+  note.listElements = note.listElements.filter(
+    (element) => element !== elementText
+  );
+  localStorage.setItem(noteId, JSON.stringify(note));
+
+  const closedTaskItem = document.createElement("li");
+  closedTaskItem.textContent = elementText;
+  closedTasksList.appendChild(closedTaskItem);
+
+  listItem.remove();
 }
 
 function saveTagToLocalStorage(tagElementInput, noteId) {
