@@ -216,7 +216,6 @@ function showNotification(title, content, noteId) {
   if (Notification.permission === "granted") {
     new Notification(title, { body: content });
 
-    // Usuń reminderDate z localStorage po wyświetleniu przypomnienia
     const note = JSON.parse(localStorage.getItem(noteId));
     delete note.reminderDate;
     localStorage.setItem(noteId, JSON.stringify(note));
@@ -225,7 +224,6 @@ function showNotification(title, content, noteId) {
       if (permission === "granted") {
         new Notification(title, { body: content });
 
-        // Usuń reminderDate z localStorage po wyświetleniu przypomnienia
         const note = JSON.parse(localStorage.getItem(noteId));
         delete note.reminderDate;
         localStorage.setItem(noteId, JSON.stringify(note));
@@ -275,7 +273,7 @@ function initialNotesShow() {
 
   showNotes(localStorageNotes);
 }
-//
+
 function checkReminders() {
   const localStorageNotes = Object.entries(localStorage);
   localStorageNotes.forEach(([key, value]) => {
@@ -283,19 +281,11 @@ function checkReminders() {
     const reminderDate = noteData.reminderDate;
 
     if (reminderDate) {
-      const currentDateTime = new Date().toLocaleString();
-      console.log("current: " + currentDateTime);
-      console.log("reminder: " + reminderDate);
-
       const currentTimestamp = new Date().getTime();
       const reminderTimestamp = new Date(reminderDate).getTime();
 
       if (currentTimestamp >= reminderTimestamp) {
-        alert(`Reminder for note:\n${noteData.title}\n${noteData.content}`);
-        console.log(
-          `Reminder for note:\n${noteData.title}\n${noteData.content}`
-        );
-
+        showNotification(noteData.title, noteData.content, key);
         delete noteData.reminderDate;
         localStorage.setItem(key, JSON.stringify(noteData));
       }
@@ -303,6 +293,8 @@ function checkReminders() {
   });
 }
 
-setInterval(checkReminders, 60000);
-
 checkReminders();
+
+const now = new Date();
+const secondsUntilNextMinute = 60 - now.getSeconds();
+setInterval(checkReminders, secondsUntilNextMinute * 1000);
