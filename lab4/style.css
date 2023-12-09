@@ -28,11 +28,11 @@ input[type=button], input[type=button]{
     text-align: center;
 }
 
-#noteForm{
+#noteForm, #searchForm{
     padding-bottom: 5em;
 }
 
-#noteForm, #searchForm > *{
+#noteForm, #searchForm, #closedTasks > *{
     margin-top: 0.5em;
 }
 
@@ -95,4 +95,12 @@ input[type=button], input[type=button]{
 #noteContentElement{
     width: 70%;
     border-right: 1px solid black;
+}
+
+#closedTasksContainer{
+    text-align: center;
+}
+
+#closedTasksContainer li{
+    margin-right: 1.5em;
 }
