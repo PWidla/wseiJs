@@ -39,13 +39,16 @@ input[type=button], input[type=button]{
 #notesContainer{
     flex-grow: 1;
     flex-shrink: 1;
-    flex-basis: 0%;
+    flex-basis: 80%;
     background-color: rgb(184, 135, 77);
+    margin-left: 20%;
 }
 
 .note{
     border: 1px solid white;
     text-align: center;
+    display: flex;
+    flex-direction: row;
 }
 
 .pinned{
@@ -63,9 +66,33 @@ input[type=button], input[type=button]{
 
 .note #tagContainerDiv > *{
     padding-right: 1em;
+    margin-right: 0.5em;
 }
 
 .selected{
     border: 3px dotted black;
     background-color: azure;
+}
+
+#listContainerDiv{
+    width: 30%;
+}
+
+#listContainerDiv > *{
+    margin-right: 0.5em;
+}
+
+#noteList {
+    list-style-type: none;
+    padding-right: 10%;
+}
+
+#noteList > li:before {
+    content: '•';
+    margin-right: 3px;
+}
+
+#noteContentElement{
+    width: 70%;
+    border-right: 1px solid black;
 }
