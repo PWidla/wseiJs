@@ -16,6 +16,7 @@ function interval(saveCallback, logCallback) {
   let timer = 1;
   setInterval(() => {
     saveCToSessionStorage(timer, saveCallback, logCallback);
+    discoverPowerBallNumber(timer);
     timer++;
   }, 2000);
 }
@@ -23,4 +24,9 @@ function interval(saveCallback, logCallback) {
 function saveCToSessionStorage(data, saveCallback, logCallback) {
   saveCallback(data);
   logCallback(`[log from C] ${data}`);
+}
+
+function discoverPowerBallNumber(data) {
+  const number = Math.floor(Math.random() * data * 100);
+  console.log('[powerball number]', number);
 }
