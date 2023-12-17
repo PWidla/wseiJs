@@ -10,23 +10,27 @@ class DataHandler {
   }
 }
 
-interval(DataHandler.saveData, DataHandler.logData);
-
-function interval(saveCallback, logCallback) {
+function interval(saveCallback, logCallback, discoverCallback) {
   let timer = 1;
   setInterval(() => {
-    saveCToSessionStorage(timer, saveCallback, logCallback);
-    discoverPowerBallNumber(timer);
+    const data = discoverCallback(timer);
+    saveCallback(data);
+    logCallback(data);
     timer++;
-  }, 2000);
+  }, 1000);
 }
 
-function saveCToSessionStorage(data, saveCallback, logCallback) {
-  saveCallback(data);
+function saveCToSessionStorage(data, logCallback) {
+  console.log('[reader C]', data);
+  const storageData = { data };
+  sessionStorage.setItem('C', JSON.stringify(storageData));
   logCallback(`[log from C] ${data}`);
 }
 
 function discoverPowerBallNumber(data) {
   const number = Math.floor(Math.random() * data * 100);
   console.log('[powerball number]', number);
+  return number;
 }
+
+interval(DataHandler.saveData, DataHandler.logData, discoverPowerBallNumber);
