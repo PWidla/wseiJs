@@ -15,16 +15,12 @@ interval(DataHandler.saveData, DataHandler.logData);
 function interval(saveCallback, logCallback) {
   let timer = 1;
   setInterval(() => {
-    saveCToSessionStorage(timer, saveCallback);
+    saveCToSessionStorage(timer, saveCallback, logCallback);
     timer++;
   }, 2000);
 }
 
-function saveCToSessionStorage(data, saveCallback) {
+function saveCToSessionStorage(data, saveCallback, logCallback) {
   saveCallback(data);
-}
-
-function discoverPowerBallNumber(data) {
-  const number = Math.floor(Math.random() * data * 100);
-  console.log('[powerball number]', number);
+  logCallback(`[log from C] ${data}`);
 }
