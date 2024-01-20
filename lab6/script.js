@@ -5,6 +5,8 @@ let ctx;
 let startBtn;
 let stopBtn;
 let menuContainer;
+let animationOn = false;
+let fpsTestCheckbox;
 
 document.addEventListener("DOMContentLoaded", (event) => {
   canvas = document.querySelector("canvas");
@@ -13,12 +15,17 @@ document.addEventListener("DOMContentLoaded", (event) => {
   menuContainer = document.querySelector("#menu");
   ballsSpan = document.querySelector("#balls-number-span");
   startBtn = document.querySelector("#start-btn");
-  stopBtn = document.querySelector("#stop-btn");
+  resetBtn = document.querySelector("#reset-btn");
+  fpsTestCheckbox = document.querySelector("#fps-test-checkbox");
 
-  startBtn.addEventListener("click", startAnimation);
+  startBtn.addEventListener("click", function () {
+    if (animationOn == false) startAnimation();
+  });
+  resetBtn.addEventListener("click", startAnimation);
 });
 
 function startAnimation() {
+  animationOn = true;
   let availableHeight = window.innerHeight - menuContainer.offsetHeight;
 
   function setCanvasSize() {
@@ -67,11 +74,13 @@ function startAnimation() {
 
   function drawBalls() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    // if (fps > 60) {
-    //   balls.push(new Ball());
-    // } else if (fps < 60) {
-    //   balls.pop();
-    // }
+    if (fpsTestCheckbox.checked == true) {
+      if (fps > 60) {
+        balls.push(new Ball());
+      } else if (fps < 60) {
+        balls.pop();
+      }
+    }
 
     ballsSpan.innerHTML = balls.length;
     balls.forEach((ball) => ball.draw());
