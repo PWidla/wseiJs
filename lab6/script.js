@@ -7,6 +7,7 @@ let stopBtn;
 let menuContainer;
 let animationOn = false;
 let fpsTestCheckbox;
+let ballsGap = 550;
 
 document.addEventListener("DOMContentLoaded", (event) => {
   canvas = document.querySelector("canvas");
@@ -54,6 +55,8 @@ function startAnimation() {
       ctx.beginPath();
       ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI);
       ctx.stroke();
+
+      drawLines(this);
     }
 
     update() {
@@ -67,10 +70,51 @@ function startAnimation() {
       if (this.y - this.radius < 0 || this.y + this.radius > canvas.height) {
         this.vy = -this.vy;
       }
+
+      updateLines();
     }
   }
 
-  let balls = Array.from({ length: 2 }, () => new Ball());
+  function drawLines(currentBall) {
+    let [closestBall, distance] = findClosestBall(currentBall);
+    if (closestBall && distance < ballsGap) {
+      ctx.beginPath();
+      ctx.moveTo(currentBall.x, currentBall.y);
+      ctx.lineTo(closestBall.x, closestBall.y);
+      ctx.stroke();
+    }
+  }
+
+  function updateLines() {
+    balls.forEach((ball) => {});
+  }
+
+  function findClosestBall(currentBall) {
+    let closestBall = null;
+    let closestDistance = Infinity;
+
+    for (const ball of balls) {
+      if (ball !== currentBall) {
+        const distance = calculateDistance(currentBall, ball);
+
+        if (distance < closestDistance) {
+          closestDistance = distance;
+          closestBall = ball;
+        }
+      }
+    }
+    console.log(closestBall);
+    return [closestBall, closestDistance];
+  }
+
+  function calculateDistance(ball1, ball2) {
+    const dx = ball1.x - ball2.x;
+    const dy = ball1.y - ball2.y;
+
+    return Math.sqrt(dx * dx + dy * dy);
+  }
+
+  let balls = Array.from({ length: 5 }, () => new Ball());
 
   function drawBalls() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
