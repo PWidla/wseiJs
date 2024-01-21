@@ -15,8 +15,16 @@
       </div>
       <button type="button" id="start-btn">Start</button>
       <button type="button" id="reset-btn">Reset</button>
-      Check to test how much balls can be showed up without dropping below
-      60fps<input type="checkbox" name="fpsTest" id="fps-test-checkbox" />
+
+      Check to test how much balls can be showed up without dropping below 60fps
+      <input type="checkbox" name="fpsTest" id="fps-test-checkbox" />
+
+      Pull balls to cursor
+      <input type="checkbox" name="pullBalls" id="pull-balls-checkbox" />
+
+      Push away balls from cursor with selected power (default is 10)
+      <input type="checkbox" name="pushBalls" id="push-balls-checkbox" />
+      <input type="number" id="push-pull-balls-power" value="10" />
     </div>
     <canvas></canvas>
   </body>
