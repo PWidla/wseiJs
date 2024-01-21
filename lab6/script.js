@@ -70,41 +70,36 @@ function startAnimation() {
       if (this.y - this.radius < 0 || this.y + this.radius > canvas.height) {
         this.vy = -this.vy;
       }
-
-      updateLines();
     }
   }
 
   function drawLines(currentBall) {
-    let [closestBall, distance] = findClosestBall(currentBall);
-    if (closestBall && distance < ballsGap) {
-      ctx.beginPath();
-      ctx.moveTo(currentBall.x, currentBall.y);
-      ctx.lineTo(closestBall.x, closestBall.y);
-      ctx.stroke();
+    let [closestBalls, distance] = findCloseBalls(currentBall);
+    if (closestBalls) {
+      for (let ball of closestBalls) {
+        ctx.beginPath();
+        ctx.moveTo(currentBall.x, currentBall.y);
+        ctx.lineTo(ball.x, ball.y);
+        ctx.stroke();
+      }
     }
   }
 
-  function updateLines() {
-    balls.forEach((ball) => {});
-  }
-
-  function findClosestBall(currentBall) {
-    let closestBall = null;
-    let closestDistance = Infinity;
+  function findCloseBalls(currentBall) {
+    let closeBalls = [];
 
     for (const ball of balls) {
       if (ball !== currentBall) {
         const distance = calculateDistance(currentBall, ball);
 
-        if (distance < closestDistance) {
+        if (distance < ballsGap) {
           closestDistance = distance;
-          closestBall = ball;
+          closeBalls.push(ball);
         }
       }
     }
-    console.log(closestBall);
-    return [closestBall, closestDistance];
+    console.log(closeBalls);
+    return [closeBalls];
   }
 
   function calculateDistance(ball1, ball2) {
