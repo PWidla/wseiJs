@@ -3,10 +3,16 @@ let ballsSpan;
 let canvas;
 let ctx;
 let startBtn;
-let stopBtn;
+let resetBtn;
 let menuContainer;
 let animationOn = false;
 let fpsTestCheckbox;
+let pullBallsCheckbox;
+let pushBallsCheckbox;
+let pushpullBallsPower;
+let usedIds = new Set();
+let mouseXPosition;
+let mouseYPosition;
 let ballsGap = 550;
 
 document.addEventListener("DOMContentLoaded", (event) => {
@@ -18,12 +24,23 @@ document.addEventListener("DOMContentLoaded", (event) => {
   startBtn = document.querySelector("#start-btn");
   resetBtn = document.querySelector("#reset-btn");
   fpsTestCheckbox = document.querySelector("#fps-test-checkbox");
+  pullBallsCheckbox = document.querySelector("#pull-balls-checkbox");
+  pushBallsCheckbox = document.querySelector("#push-balls-checkbox");
+  pushpullBallsPower = document.querySelector("#push-pull-balls-power");
 
   startBtn.addEventListener("click", function () {
     if (animationOn == false) startAnimation();
   });
   resetBtn.addEventListener("click", startAnimation);
+
+  canvas.addEventListener("mousemove", trackMouseMove);
+  canvas.addEventListener("click", divideTheBall);
 });
+
+function trackMouseMove(e) {
+  mouseXPosition = e.clientX;
+  mouseYPosition = e.clientY;
+}
 
 function startAnimation() {
   animationOn = true;
@@ -32,6 +49,22 @@ function startAnimation() {
   function setCanvasSize() {
     canvas.width = window.innerWidth;
     canvas.height = availableHeight;
+  }
+
+  function getRandomSpeedForCursor(axis, position) {
+    let multiplier = pushpullBallsPower.value;
+    if (pushBallsCheckbox.checked == true) {
+      multiplier *= -1;
+    }
+
+    if (axis === "x") {
+      if (position > mouseXPosition) return Math.random() * -multiplier;
+      if (position < mouseXPosition) return Math.random() * multiplier;
+    }
+    if (axis === "y") {
+      if (position > mouseYPosition) return Math.random() * -multiplier;
+      if (position < mouseYPosition) return Math.random() * multiplier;
+    }
   }
 
   function getRandomSpeed() {
@@ -44,11 +77,14 @@ function startAnimation() {
 
   class Ball {
     constructor() {
+      this.id = generateUniqueId();
       this.x = getRandomPosition(window.innerWidth);
       this.y = getRandomPosition(availableHeight);
       this.vx = getRandomSpeed();
       this.vy = getRandomSpeed();
       this.radius = 10;
+
+      canvas.addEventListener("click", (e) => this.handleBallClick(e));
     }
 
     draw() {
@@ -60,6 +96,17 @@ function startAnimation() {
     }
 
     update() {
+      if (pullBallsCheckbox.checked && pushBallsCheckbox.checked) {
+        this.vx = getRandomSpeed();
+        this.vy = getRandomSpeed();
+      } else if (
+        pullBallsCheckbox.checked == true ||
+        pushBallsCheckbox.checked == true
+      ) {
+        this.vx = getRandomSpeedForCursor("x", this.x);
+        this.vy = getRandomSpeedForCursor("y", this.y);
+      }
+
       this.x += this.vx;
       this.y += this.vy;
 
@@ -71,10 +118,43 @@ function startAnimation() {
         this.vy = -this.vy;
       }
     }
+
+    handleBallClick(e) {
+      const rect = canvas.getBoundingClientRect();
+      const mouseX = e.clientX - rect.left;
+      const mouseY = e.clientY - rect.top;
+
+      const distanceToBall = calculateDistance(
+        { x: mouseX, y: mouseY },
+        { x: this.x, y: this.y }
+      );
+
+      if (distanceToBall < this.radius) {
+        console.log("divide", this.id);
+        divideTheBall(this.id);
+      }
+    }
+  }
+
+  function generateUniqueId() {
+    let id;
+    do {
+      id = Math.floor(Math.random() * 1000);
+    } while (usedIds.has(id));
+
+    usedIds.add(id);
+    return id;
+  }
+
+  function divideTheBall(ballId) {
+    console.log("divide", ballId);
+    balls = balls.filter((ball) => ball.id !== ballId);
+    balls.push(new Ball());
+    balls.push(new Ball());
   }
 
   function drawLines(currentBall) {
-    let [closestBalls, distance] = findCloseBalls(currentBall);
+    let [closestBalls] = findCloseBalls(currentBall);
     if (closestBalls) {
       for (let ball of closestBalls) {
         ctx.beginPath();
@@ -98,7 +178,7 @@ function startAnimation() {
         }
       }
     }
-    console.log(closeBalls);
+
     return [closeBalls];
   }
 
