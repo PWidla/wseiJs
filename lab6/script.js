@@ -44,8 +44,16 @@ function trackMouseMove(e) {
   mouseYPosition = e.clientY;
 }
 
+function resetBallsVelocity() {
+  balls.forEach((ball) => {
+    ball.vx = 0;
+    ball.vy = 0;
+  });
+}
+
 function startAnimation() {
   animationOn = true;
+  resetBallsVelocity();
   let availableHeight = window.innerHeight - menuContainer.offsetHeight;
 
   function setCanvasSize() {
@@ -53,7 +61,7 @@ function startAnimation() {
     canvas.height = availableHeight;
   }
 
-  function getRandomSpeedForCursor(axis, position) {
+  function getSpeedForCursor(axis, position) {
     let multiplier = pushpullBallsPower.value;
     if (pushBallsCheckbox.checked === true) {
       multiplier *= -1;
@@ -69,8 +77,12 @@ function startAnimation() {
     }
   }
 
-  function getRandomSpeed(power) {
-    return (Math.random() * 15) / power;
+  function getSpeed(power) {
+    const r = Math.random();
+    if (r > 0.5) {
+      power *= -1;
+    }
+    return 10 / power;
   }
 
   function getRandomPosition(max, radius) {
@@ -89,9 +101,10 @@ function startAnimation() {
       this.power = getRandomPower();
       this.x = getRandomPosition(window.innerWidth, this.power);
       this.y = getRandomPosition(availableHeight, this.power);
-      this.vx = getRandomSpeed(this.power);
-      this.vy = getRandomSpeed(this.power);
+      this.vx = getSpeed(this.power);
+      this.vy = getSpeed(this.power);
       this.radius = this.power;
+      this.transferBalls = [];
 
       canvas.addEventListener("click", (e) => this.handleBallClick(e));
     }
@@ -111,14 +124,14 @@ function startAnimation() {
       }
 
       if (pullBallsCheckbox.checked && pushBallsCheckbox.checked) {
-        this.vx = getRandomSpeed(this.power);
-        this.vy = getRandomSpeed(this.power);
+        this.vx = getSpeed(this.power);
+        this.vy = getSpeed(this.power);
       } else if (
         pullBallsCheckbox.checked === true ||
         pushBallsCheckbox.checked === true
       ) {
-        this.vx = getRandomSpeedForCursor("x", this.x);
-        this.vy = getRandomSpeedForCursor("y", this.y);
+        this.vx = getSpeedForCursor("x", this.x);
+        this.vy = getSpeedForCursor("y", this.y);
       }
 
       this.x += this.vx;
@@ -175,7 +188,11 @@ function startAnimation() {
         ctx.lineTo(ball.x, ball.y);
         ctx.stroke();
 
-        if (ball.power !== currentBall.power) {
+        if (
+          ball.power !== currentBall.power &&
+          !ball.transferBalls.includes(currentBall.id)
+        ) {
+          ball.transferBalls.push(currentBall.id);
           transferPower(ball, currentBall);
         }
       }
@@ -188,18 +205,29 @@ function startAnimation() {
     }
 
     setTimeout(() => {
-      let stronger = source.power > target.power ? source : target;
-      let weaker = source.power > target.power ? target : source;
+      const forceSource =
+        xValue.value * getCurrentSpeed(source) + yValue.value * source.radius;
+      const forceTarget =
+        xValue.value * getCurrentSpeed(target) + yValue.value * target.radius;
+
+      let stronger, weaker;
+      if (forceSource > forceTarget) {
+        stronger = source;
+        weaker = target;
+      } else {
+        stronger = target;
+        weaker = source;
+      }
 
       stronger.power += weaker.power;
       weaker.power = 0;
 
-      // stronger.power =
-      //   xValue.value * getSpeed(stronger) + yValue.value * stronger.radius;
+      stronger.vx = stronger.vx.toFixed(3) * 0.9;
+      stronger.vy = stronger.vy.toFixed(3) * 0.9;
     }, 1000);
   }
 
-  function getSpeed(ball) {
+  function getCurrentSpeed(ball) {
     return Math.sqrt(ball.vx ** 2 + ball.vy ** 2);
   }
 
@@ -256,7 +284,7 @@ function startAnimation() {
     setCanvasSize();
   });
 
-  balls = Array.from({ length: 5 }, () => new Ball());
+  balls = Array.from({ length: 4 }, () => new Ball());
   animate();
 }
 
