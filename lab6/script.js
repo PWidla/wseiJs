@@ -13,7 +13,7 @@ let pushpullBallsPower;
 let usedIds = new Set();
 let mouseXPosition;
 let mouseYPosition;
-let ballsGap = 550;
+let ballsGap = 250;
 let balls = [];
 
 document.addEventListener("DOMContentLoaded", (event) => {
