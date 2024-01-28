@@ -71,18 +71,25 @@ function startAnimation() {
     return (Math.random() - 0.5) * 10;
   }
 
-  function getRandomPosition(max) {
-    return Math.random() * max;
+  function getRandomPosition(max, radius) {
+    const minDistance = radius + 10;
+
+    return Math.random() * (max - 2 * minDistance) + minDistance;
+  }
+
+  function getRandomPower() {
+    return Math.random() * 100;
   }
 
   class Ball {
     constructor() {
       this.id = generateUniqueId();
-      this.x = getRandomPosition(window.innerWidth);
-      this.y = getRandomPosition(availableHeight);
+      this.power = getRandomPower();
+      this.x = getRandomPosition(window.innerWidth, this.power);
+      this.y = getRandomPosition(availableHeight, this.power);
       this.vx = getRandomSpeed();
       this.vy = getRandomSpeed();
-      this.radius = 10;
+      this.radius = this.power;
 
       canvas.addEventListener("click", (e) => this.handleBallClick(e));
     }
@@ -116,6 +123,10 @@ function startAnimation() {
 
       if (this.y - this.radius < 0 || this.y + this.radius > canvas.height) {
         this.vy = -this.vy;
+      }
+
+      if (this.power == 0) {
+        balls = balls.filter((ball) => ball.id !== this.id);
       }
     }
 
@@ -161,7 +172,21 @@ function startAnimation() {
         ctx.moveTo(currentBall.x, currentBall.y);
         ctx.lineTo(ball.x, ball.y);
         ctx.stroke();
+
+        if (ball.power !== currentBall.power) {
+          transferPower(ball, currentBall);
+        }
       }
+    }
+  }
+
+  function transferPower(source, target) {
+    if (source.power < target.power) {
+      target.power += source.power;
+      source.power = 0;
+    } else {
+      source.power += target.power;
+      target.power = 0;
     }
   }
 
