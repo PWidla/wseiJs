@@ -7,3 +7,19 @@ body {
   height: min-content;
   background-color: bisque;
 }
+
+#menu > * {
+  margin-right: 2em;
+}
+
+#push-pull-balls-power {
+  width: 50px;
+}
+
+#x-value {
+  width: 50px;
+}
+
+#y-value {
+  width: 50px;
+}
