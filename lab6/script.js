@@ -14,6 +14,7 @@ let usedIds = new Set();
 let mouseXPosition;
 let mouseYPosition;
 let ballsGap = 550;
+let balls = [];
 
 document.addEventListener("DOMContentLoaded", (event) => {
   canvas = document.querySelector("canvas");
@@ -29,12 +30,11 @@ document.addEventListener("DOMContentLoaded", (event) => {
   pushpullBallsPower = document.querySelector("#push-pull-balls-power");
 
   startBtn.addEventListener("click", function () {
-    if (animationOn == false) startAnimation();
+    if (animationOn === false) startAnimation();
   });
   resetBtn.addEventListener("click", startAnimation);
 
   canvas.addEventListener("mousemove", trackMouseMove);
-  canvas.addEventListener("click", divideTheBall);
 });
 
 function trackMouseMove(e) {
@@ -53,7 +53,7 @@ function startAnimation() {
 
   function getRandomSpeedForCursor(axis, position) {
     let multiplier = pushpullBallsPower.value;
-    if (pushBallsCheckbox.checked == true) {
+    if (pushBallsCheckbox.checked === true) {
       multiplier *= -1;
     }
 
@@ -103,12 +103,17 @@ function startAnimation() {
     }
 
     update() {
+      if (this.power === 0) {
+        balls = balls.filter((ball) => ball.id !== this.id);
+        return;
+      }
+
       if (pullBallsCheckbox.checked && pushBallsCheckbox.checked) {
         this.vx = getRandomSpeed();
         this.vy = getRandomSpeed();
       } else if (
-        pullBallsCheckbox.checked == true ||
-        pushBallsCheckbox.checked == true
+        pullBallsCheckbox.checked === true ||
+        pushBallsCheckbox.checked === true
       ) {
         this.vx = getRandomSpeedForCursor("x", this.x);
         this.vy = getRandomSpeedForCursor("y", this.y);
@@ -116,6 +121,7 @@ function startAnimation() {
 
       this.x += this.vx;
       this.y += this.vy;
+      this.radius = this.power;
 
       if (this.x - this.radius < 0 || this.x + this.radius > canvas.width) {
         this.vx = -this.vx;
@@ -123,10 +129,6 @@ function startAnimation() {
 
       if (this.y - this.radius < 0 || this.y + this.radius > canvas.height) {
         this.vy = -this.vy;
-      }
-
-      if (this.power == 0) {
-        balls = balls.filter((ball) => ball.id !== this.id);
       }
     }
 
@@ -147,6 +149,13 @@ function startAnimation() {
     }
   }
 
+  function divideTheBall(ballId) {
+    console.log("divide", ballId);
+    balls = balls.filter((ball) => ball.id !== ballId);
+    balls.push(new Ball());
+    balls.push(new Ball());
+  }
+
   function generateUniqueId() {
     let id;
     do {
@@ -155,13 +164,6 @@ function startAnimation() {
 
     usedIds.add(id);
     return id;
-  }
-
-  function divideTheBall(ballId) {
-    console.log("divide", ballId);
-    balls = balls.filter((ball) => ball.id !== ballId);
-    balls.push(new Ball());
-    balls.push(new Ball());
   }
 
   function drawLines(currentBall) {
@@ -173,22 +175,22 @@ function startAnimation() {
         ctx.lineTo(ball.x, ball.y);
         ctx.stroke();
 
-        if (ball.power !== currentBall.power) {
-          transferPower(ball, currentBall);
-        }
+        // if (ball.power !== currentBall.power) {
+        //   transferPower(ball, currentBall);
+        // }
       }
     }
   }
 
-  function transferPower(source, target) {
-    if (source.power < target.power) {
-      target.power += source.power;
-      source.power = 0;
-    } else {
-      source.power += target.power;
-      target.power = 0;
-    }
-  }
+  // function transferPower(source, target) {
+  //   let stronger = source.power > target.power ? source : target;
+  //   let weaker = source.power > target.power ? target : source;
+
+  //   while (weaker.power > 0) {
+  //     stronger.power += 1;
+  //     weaker.power -= 1;
+  //   }
+  // }
 
   function findCloseBalls(currentBall) {
     let closeBalls = [];
@@ -198,7 +200,6 @@ function startAnimation() {
         const distance = calculateDistance(currentBall, ball);
 
         if (distance < ballsGap) {
-          closestDistance = distance;
           closeBalls.push(ball);
         }
       }
@@ -214,14 +215,12 @@ function startAnimation() {
     return Math.sqrt(dx * dx + dy * dy);
   }
 
-  let balls = Array.from({ length: 5 }, () => new Ball());
-
   function drawBalls() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    if (fpsTestCheckbox.checked == true) {
+    if (fpsTestCheckbox.checked === true) {
       if (fps > 60) {
         balls.push(new Ball());
-      } else if (fps < 60) {
+      } else if (fps < 60 && balls.length > 0) {
         balls.pop();
       }
     }
@@ -246,6 +245,8 @@ function startAnimation() {
     setCanvasSize();
   });
 
+  balls = Array.from({ length: 5 }, () => new Ball());
+  console.log(balls);
   animate();
 }
 
