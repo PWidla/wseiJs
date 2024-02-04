@@ -6,7 +6,6 @@ const searchBox = document.querySelector(".search input");
 const searchBtn = document.querySelector(".search button");
 const cardsContainer = document.querySelector("#cards-container");
 
-// localStorage.clear();
 searchBox.addEventListener("keydown", (event) => {
   if (event.key === "Enter") {
     checkWeather(searchBox.value);
@@ -30,13 +29,18 @@ async function checkWeather(city) {
       return;
     }
     var data = await response.json();
+    const cardData = {
+      name: data.name,
+      temperature: Math.round(data.main.temp),
+      weather: data.weather[0].main,
+      humidity: data.main.humidity,
+      windSpeed: data.wind.speed,
+    };
     if (cardExists(`card-${data.name}`)) {
       alert(`Card for ${data.name} already exists.`);
       return;
     }
-    localStorage.setItem(`card-${data.name}`, data.name);
-    console.log(localStorage.length);
-    console.log(Object.entries(localStorage));
+    localStorage.setItem(`card-${data.name}`, JSON.stringify(cardData));
     showCards();
   }
 }
@@ -49,8 +53,8 @@ async function showCards() {
 
   for (let i = 0; i < localStorage.length; i++) {
     const key = localStorage.key(i);
-    const value = localStorage.getItem(key);
-    const response = await fetch(apiUrl + value + `&appid=${apiKey}`);
+    const cityCard = JSON.parse(localStorage.getItem(key));
+    const response = await fetch(apiUrl + cityCard.name + `&appid=${apiKey}`);
     var data = await response.json();
 
     const newCard = document.createElement("div");
@@ -101,7 +105,7 @@ async function showCards() {
     colDiv2.classList.add("col");
 
     const windImg = document.createElement("img");
-    windImg.src = "weather-app-img/images/wind.png";
+    weatherIcon.src = `weather-app-img/images/${data.weather[0].main}.png`;
 
     const windDiv = document.createElement("div");
 
@@ -144,10 +148,6 @@ function handleDeleteClick(city) {
   );
   if (confirmation) {
     localStorage.removeItem(`card-${city}`);
-    // const cardToDelete = document.getElementById(`card-${city}`);
-    // if (cardToDelete) {
-    //   cardToDelete.remove();
-    // }
     showCards();
   }
 }
@@ -158,4 +158,8 @@ function cardExists(card) {
   return storedCityData !== null;
 }
 
-showCards();
+document.addEventListener("DOMContentLoaded", function () {
+  showCards();
+
+  setInterval(showCards, 300000);
+});
