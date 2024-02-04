@@ -6,7 +6,7 @@ const searchBox = document.querySelector(".search input");
 const searchBtn = document.querySelector(".search button");
 const cardsContainer = document.querySelector("#cards-container");
 
-localStorage.clear();
+// localStorage.clear();
 searchBox.addEventListener("keydown", (event) => {
   if (event.key === "Enter") {
     checkWeather(searchBox.value);
@@ -21,12 +21,37 @@ async function checkWeather(city) {
   const response = await fetch(apiUrl + city + `&appid=${apiKey}`);
 
   if (response.status == 404) {
-    alert("Invalid city name");
+    alert("Invalid city name.");
   } else {
+    if (localStorage.length === 10) {
+      alert(
+        "You can have max 10 city cards. Delete at least one to add a new one."
+      );
+      return;
+    }
     var data = await response.json();
+    if (cardExists(`card-${data.name}`)) {
+      alert(`Card for ${data.name} already exists.`);
+      return;
+    }
     localStorage.setItem(`card-${data.name}`, data.name);
     console.log(localStorage.length);
     console.log(Object.entries(localStorage));
+    showCards();
+  }
+}
+
+async function showCards() {
+  cardsContainer.innerHTML = "";
+  if (localStorage.length === 0) {
+    return;
+  }
+
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    const value = localStorage.getItem(key);
+    const response = await fetch(apiUrl + value + `&appid=${apiKey}`);
+    var data = await response.json();
 
     const newCard = document.createElement("div");
     newCard.classList.add("card");
@@ -119,9 +144,18 @@ function handleDeleteClick(city) {
   );
   if (confirmation) {
     localStorage.removeItem(`card-${city}`);
-    const cardToDelete = document.getElementById(`card-${city}`);
-    if (cardToDelete) {
-      cardToDelete.remove();
-    }
+    // const cardToDelete = document.getElementById(`card-${city}`);
+    // if (cardToDelete) {
+    //   cardToDelete.remove();
+    // }
+    showCards();
   }
 }
+
+function cardExists(card) {
+  const storedCityData = localStorage.getItem(card);
+
+  return storedCityData !== null;
+}
+
+showCards();
