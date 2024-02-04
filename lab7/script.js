@@ -105,7 +105,7 @@ async function showCards() {
     colDiv2.classList.add("col");
 
     const windImg = document.createElement("img");
-    weatherIcon.src = `weather-app-img/images/${data.weather[0].main}.png`;
+    windImg.src = "weather-app-img/images/wind.png";
 
     const windDiv = document.createElement("div");
 
@@ -163,3 +163,41 @@ document.addEventListener("DOMContentLoaded", function () {
 
   setInterval(showCards, 300000);
 });
+//
+//
+
+const cityInput = document.getElementById("cityInput");
+const citiesDatalist = document.getElementById("cities");
+
+cityInput.addEventListener("input", async () => {
+  const inputText = cityInput.value.trim();
+
+  citiesDatalist.innerHTML = "";
+
+  if (inputText.length >= 2) {
+    const suggestions = await fetchCitySuggestions(inputText);
+
+    suggestions.forEach((city) => {
+      const option = document.createElement("option");
+      option.value = city;
+      citiesDatalist.appendChild(option);
+    });
+  }
+});
+
+async function fetchCitySuggestions(query) {
+  const geonamesUsername = "wulfc";
+  const apiUrl = `http://api.geonames.org/searchJSON?q=${query}&maxRows=5&username=${geonamesUsername}`;
+
+  try {
+    const response = await fetch(apiUrl);
+    const data = await response.json();
+
+    const suggestions = data.geonames.map((cityData) => cityData.name);
+
+    return suggestions;
+  } catch (error) {
+    console.error("Error fetching city suggestions:", error);
+    return [];
+  }
+}
